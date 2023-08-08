@@ -14,208 +14,191 @@ public class Main {
 
     public static void main(String[] args) {
         
-        //List<Produto> ListaProduto = new ArrayList<>();
-       
-        //LISTA DE PRODUTOS
-        ArrayList<Integer> COLAR = new ArrayList<>(); //CRIOU UMA LISTA
-        ArrayList<Integer> BRINCOS = new ArrayList<>(); //CRIOU UMA LISTA
-        ArrayList<Integer> PULSEIRA = new ArrayList<>(); //CRIOU UMA LISTA
-        ArrayList<Integer> ANEL = new ArrayList<>(); //CRIOU UMA LISTA
+        // CRIA LISTA
+        List<Product>listaDeProduto = new ArrayList<>();
         
-
+            // MOSTRA O MENU PRINCIPAL
+            String menuPrincipal =  "Menu da lanchonete do Zeca:\n"+
+                                    "1 - Adicionar produtos\n"+ //1 PRODUTO POR VEZ
+                                    "2 - Consultar produtos\n"+ //1 PRODUTO POR VEZ(mostra 1 de cada vez)
+                                    "3 - Excluir produto\n"+ //1 PRODUTO POR VEZ
+                                    "4 - Atualizar produto\n"+ //1 PRODUTO POR VEZ
+                                    "5 - Fazer reserva\n"+ //Aumentar quantidade de reserva e diminuir quantidade do produto 
+                                    "6 - Cancelar reserva\n"+
+                                    "7 - Saída de produto\n"+
+                                    "8 - Sair do menu";
+                
         
-        int opcao;
-        do {
-            
-            opcao = exibirMenu();// MOSTRA O MENU PRINCIPAL
+            int respostaMenuPrincipal = 0;           
+        while (respostaMenuPrincipal != 8){
 
-            switch (opcao) {
-                case 1:// ENTRA UM PRODUTO
+            respostaMenuPrincipal = Integer.parseInt(JOptionPane.showInputDialog(menuPrincipal));
+            switch (respostaMenuPrincipal){                
+                    
+                case 1:// INSERE UM PRODUTO
                             
-                    
-                    exibirMenuAdicionar();// MOSTRA O MENU DE ADICIONAR PRODUTO
+                    adicionarProduto(listaDeProduto);                    
                     break;
-                case 2:// CADASTRA UM PRODUTO
+                case 2:// MOSTRA OS PRODUTOS INSERIDOS
                     
-                    cadastrarProduto();
+                    exibirMenuProdutos(listaDeProduto);
                     break;
-                case 3:// MOSTRA ATUALIZAÇÃO DE UM PRODUTO DO ESTOQUE
+                case 3:// ATUALIZA UM PRODUTO DO ESTOQUE
                     
-                    atualizacaoProduto();
+                    remocaoProduto(listaDeProduto);
                     break;                  
-                case 4:// MOSTRA REMOÇÃO DE UM PRODUTO DO ESTOQUE
+                case 4:// REMOVE UM PRODUTO DO ESTOQUE
                                         
-                    remocaoProduto();
+                    atualizacaoProduto(listaDeProduto);
                     break;
-                case 5:// MOSTRA SAÍDA DO ESTOQUE
+                case 5:// FAZ A RESERVA DE UM PRODUTO
                     
-                    saidaEstoque();
+                    saidaDeEstoque(listaDeProduto);
                     break;
-                case 6:// MOSTRA QUANTIDADE DE ESTOQUE
-                    JOptionPane.showMessageDialog(null, 
-                                            "ESTOQUE DE JOIAS:\n"+
-                                            "QUANTIDADE DE COLARES: "+COLAR+"\n"+
-                                            "QUANTIDADE DE BRINCOS: "+BRINCOS+"\n"+
-                                            "QUANTIDADE DE PULSEIRAS: "+PULSEIRA+"\n"+
-                                            "QUANTIDADE DE ANEIS: "+ANEL);        
-                       
+                case 6:// CANCELA A RESERVA DE UM PRODUTO
                     
+                    
+                    break;
+                case 7:
+                    
+                    break;
+                case 8:// ENCERRA A PROGRAMAÇÃO
+                    JOptionPane.showMessageDialog(null, "Obrigado por usar nosso serviço...\n"+
+                                                        "Até logo!");                    
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+            }
+        }
+
+        
+        
+    }
+      
+    public static void adicionarProduto(List<Product> listaDeProdutos) {
+        String name = JOptionPane.showInputDialog("Por favor, digite o nome do produto que você deseja cadastrar:");
+        Double cost = Double.parseDouble(JOptionPane.showInputDialog("Por favor, digite o valor do custo unitário:"));
+        int qtd = Integer.parseInt(JOptionPane.showInputDialog("Por favor, digite o valor de Quantidade disponível:"));
+        int res = Integer.parseInt(JOptionPane.showInputDialog("Por favor, digite o valor da Quantidade reservada:"));
+
+        Product p = new Product(name, cost, qtd, res);
+
+        listaDeProdutos.add(p);
+        JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!");
+    }
+    
+    public static void exibirMenuProdutos(List<Product>listaDeProduto){// 
+        
+        if (listaDeProduto.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Estoque sem produtos cadastrados!");
+        } else {
+            String productsToPrint = "Lista de Produtos (nome, custo, quantidade, reserva)\n";
+            for (int i = 0; i < listaDeProduto.size(); i++) {
+                productsToPrint += "\n" + listaDeProduto.get(i).toString();
+                if (i == listaDeProduto.size() - 1) {
+                    JOptionPane.showMessageDialog(null, productsToPrint);
+                    productsToPrint = "Lista de Produtos (nome, custo, quantidade, reserva)\n";
                 }
-        } while (opcao != 7);
+            }
+        }
+                     
+    }
+
+    public static void remocaoProduto(List<Product>listaDeProduto) {
+        String perguntaRemocao = JOptionPane.showInputDialog("O que você quer remover do nosso estoque?");
         
+        for(int i = 0; i < listaDeProduto.size(); i++){
+        Product p = listaDeProduto.get(i);
+
+            if(p.getNome().equals(perguntaRemocao)){
+            
+            listaDeProduto.remove(p);
+
+            }else{
+            JOptionPane.showMessageDialog(null, "Desculpe, não temos este produto na nossa loja...");
+            }
+        }            
+    }
+
+    public static void atualizacaoProduto(List<Product>listaDeProduto) {
+        String perguntaAtualizacao = JOptionPane.showInputDialog("Qual produto você deseja atualizar de nosso estoque?");
+        for(int i = 0; i < listaDeProduto.size(); i++)
+    {
+        Product p = listaDeProduto.get(i);
+
+        if(p.getNome().equals(perguntaAtualizacao)){
+            String menuAtualizacao = JOptionPane.showInputDialog("O que você quer atualizar de nosso estoque?\n"+
+                    "1 - Nome\n"+
+                    "2 - Custo\n"+
+                    "3 - Quantidade em estoque\n"+
+                    "4 - Quantidade Reservada\n"+
+                    "5 - Sair do menu");
+
+            int respostaAtualizacao = 0;
+            while (respostaAtualizacao != 5){
+            respostaAtualizacao = Integer.parseInt(JOptionPane.showInputDialog(menuAtualizacao));
+                int indiceProduto = listaDeProduto.indexOf(respostaAtualizacao);
+                switch(respostaAtualizacao) {
+                case 1:
+                    
+                    String respostaAtualizacaoNome = JOptionPane.showInputDialog("Por favor, digite o novo nome que o produto deverá ser chamado:");
+                    listaDeProduto.get(indiceProduto).nome = respostaAtualizacaoNome;
+                    break;
+                case 2:
+                    
+                    double respostaAtualizacaoCusto = Double.valueOf(JOptionPane.showInputDialog("Por favor, digite o novo custo que o produto terá:"));
+                    listaDeProduto.get(indiceProduto).custoUnitario = respostaAtualizacaoCusto;
+                    break;
+                case 3:
+                    int respostaAtualizacaoQuantidadeEmEstoque = Integer.parseInt(JOptionPane.showInputDialog("Por favor, digite a nova quantidade que o produto terá:"));
+                    listaDeProduto.get(indiceProduto).quantidade = respostaAtualizacaoQuantidadeEmEstoque;
+                    break;
+                case 4:
+                    int respostaAtualizacaoQuantidadeReservada = Integer.parseInt(JOptionPane.showInputDialog("Por favor, digite a nova quantidade reservada que o produto terá:"));
+                    listaDeProduto.get(indiceProduto).reservado = respostaAtualizacaoQuantidadeReservada;
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                    break;
+                    
+                }
+            
+            }
+        
+        }else{
+            JOptionPane.showMessageDialog(null, "Desculpe, não temos este produto na nossa loja...");
+        }}
         
     }
-    public static int exibirMenu() {// FUNÇÃO DO MENU PRINCIPAL
-        String menu = "Selecione uma opção:\n" +
-                      "1 - ENTRADA DE UM PRODUTO\n" +
-                      "2 - CADASTRAR UM PRODUTO\n" +
-                      "3 - ATUALIZAR UM UM PRODUTO DO ESTOQUE\n" +
-                      "4 - REMOVER UM PRODUTO DO ESTOQUE\n" +
-                      "5 - SAÍDA DE UM PRODUTO\n" +
-                      "6 - QUANTIDADE EM ESTOQUE\n" +
-                      "7 - SAIR";
-        return Integer.parseInt(JOptionPane.showInputDialog(menu));
-    }
+
+    public static void saidaDeEstoque(List<Product>listaDeProduto) {
+        
     
-    public static void exibirMenuAdicionar(){// 
+        String perguntaSaida = JOptionPane.showInputDialog("Qual produto você deseja retirar de nosso estoque?");
         
-            String add = JOptionPane.showInputDialog("Digite:\n"+
-                                                     "1 - para adicionar um colar. \n"+
-                                                     "2 - para adicionar brincos. \n"+
-                                                     "3 - para adicionar uma pulseira. \n"+
-                                                     "4 - para adicionar um anel");
-        
-            int adicionarQuantidade = Integer.parseInt(JOptionPane.showInputDialog(add));
-            menuAdicionar(adicionarQuantidade);           
-    }
-    
-    public static int menuAdicionar(<Integer> COLAR,<Integer> PULSEIRA,<Integer> BRINCOS,<Integer> ANEL){// PERGUNTA QUAL PRODUTO ADICIONAR PUXANDO AS LISTAS E A ESPOSTA AO MENU
-        switch(){
-                    case 1:
-                        String addColar = JOptionPane.showInputDialog("Quantos colares você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addColar));
-                        COLAR.add(addColar);
-                    case 2:
-                        String addBrinco = JOptionPane.showInputDialog("Quantos brincos você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addBrinco));
-                        BRINCOS.add(addBrinco);
-                    case 3:
-                        String addPulseira = JOptionPane.showInputDialog("Quantas pulseiras você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addPulseira));
-                        PULSEIRA.add(addPulseira);
-                    case 4:
-                        String addAnel = JOptionPane.showInputDialog("Quantos aneis você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addAnel));
-                        ANEL.add(addAnel);
-                    default:
-                            JOptionPane.showMessageDialog(null, "Opção inválida.");
-                        }
-    }
-    
-    public static void cadastrarProduto(List<Integer> listaProdutos) {
-        String nome = JOptionPane.showInputDialog("DIGITE O NOME DO PRODUTO QUE VOCÊ DESEJA ADICIONAR:");
-        
+        for(int i = 0; i < listaDeProduto.size(); i++){
+        Product p = listaDeProduto.get(i);
+        int indiceProduto = listaDeProduto.indexOf(perguntaSaida);
+        if(p.getNome().equals(perguntaSaida)){
+            int menuSaida = Integer.parseInt(JOptionPane.showInputDialog("Qual quantidade você deseja retirar deste produto?"));
+            
+            if(menuSaida > listaDeProduto.reservado){
+            
+            }else if(menuSaida == listaDeProduto.reservado){
+            listaDeProduto.get(indiceProduto).reservado = 0;
+            
+            }else if(){
+            
+            }
 
-        Produto produto = new Produto(nome);
-        listaProdutos.add(produto);
-
-        JOptionPane.showMessageDialog(null, "PRODUTO CADASTRADO COM SUCESSO!");
-    }
-
-    private static void remocaoProduto() {
-        String nome = JOptionPane.showInputDialog("QUANTOS PRODUTOS FORAM REMOVIDOS DO ESTOQUE?\n"+
-                                                     "1 - COLAR \n"+
-                                                     "2 - BRINCOS \n"+
-                                                     "3 - PULSEIRA \n"+
-                                                     "4 - ANEL");
-        int numeroInteiro = Integer.parseInt(nome);
-    
-        switch(numeroInteiro){
-                    case 1:
-                        String addColar = JOptionPane.showInputDialog("Quantos colares você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addColar));
-                        COLAR.add(addColar);
-                    case 2:
-                        String addBrinco = JOptionPane.showInputDialog("Quantos brincos você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addBrinco));
-                        BRINCOS.add(addBrinco);
-                    case 3:
-                        String addPulseira = JOptionPane.showInputDialog("Quantas pulseiras você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addPulseira));
-                        PULSEIRA.add(addPulseira);
-                    case 4:
-                        String addAnel = JOptionPane.showInputDialog("Quantos aneis você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addAnel));
-                        ANEL.add(addAnel);
-                    default:
-                            JOptionPane.showMessageDialog(null, "Opção inválida.");
-                        }
-    }
-
-    private static void atualizacaoProduto() {
-        String nome = JOptionPane.showInputDialog("QUAL PRODUTO PRECISA SER ATUALIZADO?\n"+
-                                                     "1 - COLAR \n"+
-                                                     "2 - BRINCOS \n"+
-                                                     "3 - PULSEIRA \n"+
-                                                     "4 - ANEL");
-        int numeroInteiro = Integer.parseInt(nome);
-
-        switch(numeroInteiro){
-                    case 1:
-                        String addColar = JOptionPane.showInputDialog("Qual é a quantidade de colares atual?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addColar));
-                        
-                    case 2:
-                        String addBrinco = JOptionPane.showInputDialog("Qual é a quantidade de brincos atual?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addBrinco));
-                        
-                    case 3:
-                        String addPulseira = JOptionPane.showInputDialog("Qual é a quantidade de pulseiras atual?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addPulseira));
-                        
-                    case 4:
-                        String addAnel = JOptionPane.showInputDialog("Qual é a quantidade de aneis atual?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addAnel));
-                        
-                    default:
-                            JOptionPane.showMessageDialog(null, "Opção inválida.");
-                        }
-        
-    }
-
-    private static void saidaEstoque() {
-        String nome = JOptionPane.showInputDialog("QUAIS PRODUTOS SAÍRAM DO ESTOQUE?\n"+
-                                                     "1 - COLAR \n"+
-                                                     "2 - BRINCOS \n"+
-                                                     "3 - PULSEIRA \n"+
-                                                     "4 - ANEL");
-        int numeroInteiro = Integer.parseInt(nome);
-        switch(numeroInteiro){
-                    case 1:
-                        String addColar = JOptionPane.showInputDialog("Quantos colares você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addColar));
-                        COLAR.add(addColar);
-                    case 2:
-                        String addBrinco = JOptionPane.showInputDialog("Quantos brincos você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addBrinco));
-                        BRINCOS.add(addBrinco);
-                    case 3:
-                        String addPulseira = JOptionPane.showInputDialog("Quantas pulseiras você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addPulseira));
-                        PULSEIRA.add(addPulseira);
-                    case 4:
-                        String addAnel = JOptionPane.showInputDialog("Quantos aneis você quer adicionar?");
-                        Integer.parseInt(JOptionPane.showInputDialog(addAnel));
-                        ANEL.add(addAnel);
-                    default:
-                            JOptionPane.showMessageDialog(null, "Opção inválida.");
-                        }
+            
+                    
+        }else{
+            JOptionPane.showMessageDialog(null, "Desculpe, não temos este produto na nossa loja...");
+        }
            
+        }
     }
-
     
 }
 
